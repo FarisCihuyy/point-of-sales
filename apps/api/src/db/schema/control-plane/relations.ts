@@ -1,4 +1,4 @@
-import { relations } from "drizzle-orm/_relations";
+import { relations } from "drizzle-orm";
 import { tenants } from "./tenants";
 import { tenantDbCredentials } from "./tenant-credentials";
 import { subscriptions } from "./subscriptions";

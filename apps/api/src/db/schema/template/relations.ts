@@ -1,4 +1,4 @@
-import { relations } from "drizzle-orm/_relations";
+import { relations } from "drizzle-orm";
 import { payments } from "./payments";
 import { stores } from "./stores";
 import { users } from "./users";

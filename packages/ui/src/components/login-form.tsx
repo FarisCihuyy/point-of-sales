@@ -1,19 +1,19 @@
-import { cn } from "@repo/ui/lib/utils"
-import { Button } from "@repo/ui/components/ui/button"
+import { cn } from "@repo/ui/lib/utils";
+import { Button } from "@repo/ui/components/ui/button";
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@repo/ui/components/ui/card"
+} from "@repo/ui/components/ui/card";
 import {
   Field,
   FieldDescription,
   FieldGroup,
   FieldLabel,
-} from "@repo/ui/components/ui/field"
-import { Input } from "@repo/ui/components/ui/input"
+} from "@repo/ui/components/ui/field";
+import { Input } from "@repo/ui/components/ui/input";
 
 export function LoginForm({
   className,
@@ -66,5 +66,5 @@ export function LoginForm({
         </CardContent>
       </Card>
     </div>
-  )
+  );
 }

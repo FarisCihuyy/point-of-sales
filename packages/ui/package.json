@@ -6,7 +6,8 @@
   "exports": {
     "./components/*": "./src/components/*.tsx",
     "./ui/*": "./src/components/ui/*.tsx",
-    "./lib/*": "./src/lib/*.ts"
+    "./lib/*": "./src/lib/*.ts",
+    "./hooks/*": "./src/hooks/*.ts"
   },
   "scripts": {
     "typecheck": "tsc --noEmit"
@@ -15,6 +16,7 @@
     "@tanstack/react-table": "^9.2.3",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
+    "cn": "^0.2.5",
     "lucide-react": "^0.475.0",
     "radix-ui": "^1.6.7",
     "tailwind-merge": "^3.0.1"

@@ -1,5 +1,5 @@
-import { Test } from "@repo/ui/components/test";
+import { redirect } from "next/navigation";
 
 export default function Home() {
-  return <Test />;
+  redirect("/stores");
 }

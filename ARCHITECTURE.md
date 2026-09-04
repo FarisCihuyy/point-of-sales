@@ -64,10 +64,17 @@ point-of-sales/
 │   │   │   │       └── template.ts         # Tenant DB template (migrated to new tenant DBs)
 │   │   │   ├── middleware/
 │   │   │   │   └── tenant.ts               # Resolve tenant by subdomain or X-Tenant-ID
-│   │   │   ├── routes/                     # API route handlers (auth, pos, sync, inventory, etc.)
-│   │   │   │   └── health.ts
-│   │   │   ├── services/                   # Business logic services (tenant, sync, billing)
-│   │   │   │   └── tenant.service.ts
+│   │   │   ├── modules/                    # Feature-based domain modules (Elysia MVC pattern)
+│   │   │   │   ├── auth/                   # Auth module
+│   │   │   │   │   ├── index.ts            # Elysia Controller (HTTP routing, validation, cookies)
+│   │   │   │   │   ├── service.ts          # Business logic (decoupled from controller)
+│   │   │   │   │   └── model.ts            # TypeBox validation models & DTOs
+│   │   │   │   ├── user/                   # User / Staff module (index.ts, service.ts, model.ts)
+│   │   │   │   ├── store/                  # Store / Outlet module (index.ts, service.ts, model.ts)
+│   │   │   │   ├── category/               # Category module (index.ts, service.ts, model.ts)
+│   │   │   │   ├── product/                # Product module (index.ts, service.ts, model.ts)
+│   │   │   │   └── health/                 # Health check module
+│   │   │   ├── utils/                      # Shared API utilities (response, crypto, currency, etc.)
 │   │   │   └── index.ts                    # Elysia server entrypoint
 │   │   ├── drizzle.config.ts
 │   │   └── package.json

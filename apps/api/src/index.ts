@@ -3,11 +3,12 @@ import { swagger } from "@elysiajs/swagger";
 import { Elysia } from "elysia";
 
 import { tenantMiddleware } from "./middleware/tenant";
-import { healthRoute } from "./routes/health";
-import { storesRoute } from "./routes/stores";
-import { usersRoute } from "./routes/users";
-import { categoriesRoute } from "./routes/categories";
-import { productsRoute } from "./routes/products";
+import { authController } from "./modules/auth";
+import { userController } from "./modules/user";
+import { storeController } from "./modules/store";
+import { categoryController } from "./modules/category";
+import { productController } from "./modules/product";
+import { healthController } from "./modules/health";
 
 const app = new Elysia()
   .use(
@@ -27,11 +28,12 @@ const app = new Elysia()
     }),
   )
   .use(tenantMiddleware)
-  .use(healthRoute)
-  .use(storesRoute)
-  .use(usersRoute)
-  .use(categoriesRoute)
-  .use(productsRoute)
+  .use(healthController)
+  .use(authController)
+  .use(userController)
+  .use(storeController)
+  .use(categoryController)
+  .use(productController)
   .listen(3001);
 
 console.log(`🦊 API running at ${app.server?.hostname}:${app.server?.port}`);

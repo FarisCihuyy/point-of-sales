@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono, Roboto } from "next/font/google";
 import "./globals.css";
 import { cn } from "@repo/ui/lib/utils";
-import { Providers } from "../components/providers";
+import { AppProviders } from "@/core/providers";
 
 const roboto = Roboto({ subsets: ["latin"], variable: "--font-sans" });
 
@@ -39,7 +39,7 @@ export default function RootLayout({
       )}
     >
       <body className="min-h-full flex flex-col bg-background text-foreground">
-        <Providers>{children}</Providers>
+        <AppProviders>{children}</AppProviders>
       </body>
     </html>
   );

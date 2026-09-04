@@ -73,3 +73,16 @@ export const ProductSchema = z.object({
 
 export const CreateProductSchema = ProductSchema.omit({ id: true, createdAt: true, updatedAt: true });
 export const UpdateProductSchema = CreateProductSchema.partial();
+
+// Auth
+export const LoginSchema = z.object({
+  email: z.string().email("Email tidak valid"),
+  password: z.string().min(1, "Password wajib diisi"),
+});
+
+export const RegisterSchema = z.object({
+  name: z.string().min(1, "Nama wajib diisi"),
+  email: z.string().email("Email tidak valid"),
+  password: z.string().min(6, "Password minimal 6 karakter"),
+});
+

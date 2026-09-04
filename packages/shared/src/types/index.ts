@@ -15,6 +15,8 @@ import type {
   ProductVariantSchema,
   CreateProductSchema,
   UpdateProductSchema,
+  LoginSchema,
+  RegisterSchema,
 } from "../schemas";
 
 export type BusinessMode = z.infer<typeof BusinessModeSchema>;
@@ -35,3 +37,12 @@ export type Product = z.infer<typeof ProductSchema>;
 export type ProductVariant = z.infer<typeof ProductVariantSchema>;
 export type CreateProductInput = z.infer<typeof CreateProductSchema>;
 export type UpdateProductInput = z.infer<typeof UpdateProductSchema>;
+
+export type LoginInput = z.infer<typeof LoginSchema>;
+export type RegisterInput = z.infer<typeof RegisterSchema>;
+export type AuthResponse = {
+  user: User;
+  token?: string;
+  message?: string;
+};
+

@@ -3,18 +3,17 @@ import { UserModel } from "./model";
 import { UserService } from "./service";
 
 export const userController = new Elysia({ prefix: "/users" })
-  .model(UserModel)
   .get("/", () => UserService.getAll())
   .get("/:id", ({ params: { id } }) => UserService.getById(id), {
-    params: "params",
+    params: UserModel.params,
   })
   .post("/", ({ body }) => UserService.create(body), {
-    body: "create",
+    body: UserModel.create,
   })
   .put("/:id", ({ params: { id }, body }) => UserService.update(id, body), {
-    params: "params",
-    body: "update",
+    params: UserModel.params,
+    body: UserModel.update,
   })
   .delete("/:id", ({ params: { id } }) => UserService.delete(id), {
-    params: "params",
+    params: UserModel.params,
   });

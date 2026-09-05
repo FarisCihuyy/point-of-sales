@@ -46,7 +46,7 @@ export const authController = new Elysia({ prefix: "/auth" })
       return result;
     },
     {
-      body: "loginEmail",
+      body: AuthModel.loginEmail,
     }
   )
   .post(
@@ -81,7 +81,7 @@ export const authController = new Elysia({ prefix: "/auth" })
       return result;
     },
     {
-      body: "loginPin",
+      body: AuthModel.loginPin,
     }
   )
   .post("/logout", ({ cookie }) => {

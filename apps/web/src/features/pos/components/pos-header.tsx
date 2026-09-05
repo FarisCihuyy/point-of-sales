@@ -28,7 +28,7 @@ interface PosHeaderProps {
 export function PosHeader({
   searchQuery,
   onSearchChange,
-  isOnline,
+  isOnline = true,
   onSync,
   isSyncing = false,
 }: PosHeaderProps) {
@@ -45,14 +45,14 @@ export function PosHeader({
           <h1 className="text-base lg:text-lg font-bold tracking-tight leading-none">
             Pos System
           </h1>
-          <p className="text-[11px] text-muted-foreground mt-0.5 flex items-center gap-1.5">
+          <div className="text-[11px] text-muted-foreground mt-0.5 flex items-center gap-1.5">
             <span
               className={`size-1.5 rounded-full ${
                 isOnline ? "bg-emerald-500 animate-pulse" : "bg-destructive"
               }`}
             />
-            {isOnline ? "Online Terminal" : "Offline Mode"}
-          </p>
+            <span>{isOnline ? "Online Terminal" : "Offline Mode"}</span>
+          </div>
         </div>
       </div>
 
@@ -108,7 +108,9 @@ export function PosHeader({
         </Button>
 
         <div className="hidden lg:flex flex-col items-end text-right px-2">
-          <span className="text-xs font-semibold leading-none">{user?.name || "Kasir"}</span>
+          <span className="text-xs font-semibold leading-none">
+            {user?.name || "Kasir"}
+          </span>
           <span className="text-[10px] text-muted-foreground uppercase font-mono mt-0.5">
             {user?.role || "Staff"}
           </span>

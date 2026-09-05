@@ -3,18 +3,17 @@ import { StoreModel } from "./model";
 import { StoreService } from "./service";
 
 export const storeController = new Elysia({ prefix: "/stores" })
-  .model(StoreModel)
   .get("/", () => StoreService.getAll())
   .get("/:id", ({ params: { id } }) => StoreService.getById(id), {
-    params: "params",
+    params: StoreModel.params,
   })
   .post("/", ({ body }) => StoreService.create(body), {
-    body: "create",
+    body: StoreModel.create,
   })
   .put("/:id", ({ params: { id }, body }) => StoreService.update(id, body), {
-    params: "params",
-    body: "update",
+    params: StoreModel.params,
+    body: StoreModel.update,
   })
   .delete("/:id", ({ params: { id } }) => StoreService.delete(id), {
-    params: "params",
+    params: StoreModel.params,
   });

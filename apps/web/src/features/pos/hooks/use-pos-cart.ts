@@ -7,26 +7,32 @@ import type { LocalProduct, LocalProductVariant } from "@/lib/db";
 const CART_STORAGE_KEY = "pos_active_cart_draft";
 
 export function usePosCart(taxRate = 0.1, serviceChargeRate = 0) {
-  const [items, setItems] = useState<CartItem[]>(() => {
-    if (typeof window !== "undefined") {
-      try {
-        const saved = localStorage.getItem(CART_STORAGE_KEY);
-        if (saved) return JSON.parse(saved);
-      } catch (e) {
-        console.error("Failed to load saved cart:", e);
-      }
-    }
-    return [];
-  });
+  const [items, setItems] = useState<CartItem[]>([]);
+  const [isHydrated, setIsHydrated] = useState(false);
 
-  // Persist cart to localStorage for resilience
+  // Hydrate cart from localStorage on mount (client only) to prevent SSR hydration mismatch
   useEffect(() => {
+    try {
+      const saved = localStorage.getItem(CART_STORAGE_KEY);
+      if (saved) {
+        setItems(JSON.parse(saved));
+      }
+    } catch (e) {
+      console.error("Failed to load saved cart:", e);
+    } finally {
+      setIsHydrated(true);
+    }
+  }, []);
+
+  // Persist cart to localStorage for resilience once hydrated
+  useEffect(() => {
+    if (!isHydrated) return;
     try {
       localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(items));
     } catch (e) {
       console.error("Failed to persist cart:", e);
     }
-  }, [items]);
+  }, [items, isHydrated]);
 
   const addItem = useCallback(
     (product: LocalProduct, variant?: LocalProductVariant | null) => {

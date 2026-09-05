@@ -1,6 +1,5 @@
 "use client";
 
-import React from "react";
 import type { CartItem, CartSummary } from "../types";
 import { getLucideIconForName, getIconAccent } from "../lib/icon-mapper";
 import { Button } from "@repo/ui/ui/button";
@@ -9,7 +8,6 @@ import {
   Minus,
   Plus,
   ShoppingBag,
-  Receipt,
   UtensilsCrossed,
 } from "lucide-react";
 
@@ -47,7 +45,7 @@ export function CartPanel({
         <div className="flex items-center gap-2">
           <h2 className="text-base font-bold tracking-tight">Your Cart</h2>
           <span className="text-xs px-2 py-0.5 rounded-full bg-primary/10 text-primary font-medium">
-            {summary.itemCount} item
+            {summary?.itemCount || 0} item
           </span>
         </div>
 
@@ -72,7 +70,9 @@ export function CartPanel({
             <div className="size-14 rounded-2xl bg-muted/60 flex items-center justify-center mb-3 text-muted-foreground/80">
               <ShoppingBag className="size-7" />
             </div>
-            <p className="text-sm font-semibold text-foreground">Keranjang Kosong</p>
+            <p className="text-sm font-semibold text-foreground">
+              Keranjang Kosong
+            </p>
             <p className="text-xs text-muted-foreground mt-1 max-w-[200px]">
               Ketuk atau klik produk dari katalog untuk menambah pesanan.
             </p>
@@ -84,7 +84,10 @@ export function CartPanel({
             const lineTotal = item.unitPrice * item.quantity;
 
             return (
-              <div key={item.id} className="pt-3 first:pt-0 flex items-center gap-3">
+              <div
+                key={item.id}
+                className="pt-3 first:pt-0 flex items-center gap-3"
+              >
                 {/* Visual Icon Thumbnail */}
                 <div
                   className={`size-11 rounded-lg shrink-0 flex items-center justify-center ${accent.bg} ${accent.text}`}

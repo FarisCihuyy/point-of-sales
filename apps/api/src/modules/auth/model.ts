@@ -7,7 +7,7 @@ export const AuthModel = {
   }),
 
   loginPin: t.Object({
-    pin: t.String({ minLength: 4, maxLength: 6, error: "PIN harus 4-6 digit angka" }),
+    pin: t.String({ minLength: 6, maxLength: 6, pattern: "^\\d{6}$", error: "PIN harus tepat 6 digit angka" }),
     storeId: t.Optional(t.String()),
   }),
 

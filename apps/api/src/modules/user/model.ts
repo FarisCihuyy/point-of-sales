@@ -29,7 +29,16 @@ export const UserModel = {
         t.Literal("waitstaff"),
       ])
     ),
-    pin: t.Optional(t.Nullable(t.String())),
+    pin: t.Optional(
+      t.Nullable(
+        t.String({
+          minLength: 6,
+          maxLength: 6,
+          pattern: "^\\d{6}$",
+          error: "PIN harus tepat 6 digit angka",
+        })
+      )
+    ),
     isActive: t.Optional(t.Boolean()),
   }),
 
@@ -46,7 +55,16 @@ export const UserModel = {
         t.Literal("waitstaff"),
       ])
     ),
-    pin: t.Optional(t.Nullable(t.String())),
+    pin: t.Optional(
+      t.Nullable(
+        t.String({
+          minLength: 6,
+          maxLength: 6,
+          pattern: "^\\d{6}$",
+          error: "PIN harus tepat 6 digit angka",
+        })
+      )
+    ),
     isActive: t.Optional(t.Boolean()),
   }),
 

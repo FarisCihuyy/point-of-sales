@@ -48,7 +48,7 @@ export function UserDialog({
         password: "",
         storeId: editingUser.storeId ?? null,
         role: editingUser.role,
-        pin: editingUser.pin || "",
+        pin: "",
         isActive: editingUser.isActive,
       });
     } else {
@@ -142,16 +142,19 @@ export function UserDialog({
               </div>
 
               <div className="space-y-1">
-                <Label htmlFor="userPin">PIN Kasir (4-6 Digit)</Label>
+                <Label htmlFor="userPin">PIN Kasir (6 Digit)</Label>
                 <Input
                   id="userPin"
                   type="password"
                   maxLength={6}
                   value={formData.pin || ""}
                   onChange={(e) =>
-                    setFormData({ ...formData, pin: e.target.value })
+                    setFormData({
+                      ...formData,
+                      pin: e.target.value.replace(/\D/g, "").slice(0, 6),
+                    })
                   }
-                  placeholder="1234"
+                  placeholder="Contoh: 123456"
                 />
               </div>
             </div>

@@ -32,7 +32,7 @@ export const UserSchema = z.object({
 
 export const CreateUserSchema = UserSchema.omit({ id: true, createdAt: true }).extend({
   password: z.string().min(6, "Password minimal 6 karakter").optional(),
-  pin: z.string().regex(/^\d{4,6}$/, "PIN harus 4-6 digit angka").optional().nullable(),
+  pin: z.string().regex(/^\d{6}$/, "PIN harus tepat 6 digit angka").optional().nullable(),
 });
 export const UpdateUserSchema = CreateUserSchema.partial();
 
@@ -81,7 +81,7 @@ export const LoginSchema = z.object({
 });
 
 export const LoginPinSchema = z.object({
-  pin: z.string().regex(/^\d{4,6}$/, "PIN harus 4-6 digit angka"),
+  pin: z.string().regex(/^\d{6}$/, "PIN harus tepat 6 digit angka"),
   storeId: z.string().optional(),
 });
 

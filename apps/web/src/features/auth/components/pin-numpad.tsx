@@ -18,7 +18,7 @@ export function PinNumpad() {
 
   const handleLogin = useCallback(
     (pinValue: string) => {
-      if (pinValue.length >= 4 && !isLoggingInPin) {
+      if (pinValue.length === 6 && !isLoggingInPin) {
         loginPin({ pin: pinValue });
       }
     },
@@ -58,7 +58,7 @@ export function PinNumpad() {
         handleBackspace();
       } else if (e.key === "Escape") {
         handleClear();
-      } else if (e.key === "Enter" && pin.length >= 4) {
+      } else if (e.key === "Enter" && pin.length === 6) {
         handleLogin(pin);
       }
     };
@@ -77,7 +77,7 @@ export function PinNumpad() {
           Terminal Kasir
         </CardTitle>
         <CardDescription className="text-xs text-muted-foreground">
-          Masukkan 4-6 digit PIN staff untuk membuka sesi
+          Masukkan 6 digit PIN staff untuk membuka sesi
         </CardDescription>
       </CardHeader>
 
@@ -169,7 +169,7 @@ export function PinNumpad() {
         <Button
           type="button"
           className="w-full h-11 font-medium text-sm"
-          disabled={pin.length < 4 || isLoggingInPin}
+          disabled={pin.length !== 6 || isLoggingInPin}
           onClick={() => handleLogin(pin)}
         >
           {isLoggingInPin ? "Memverifikasi PIN..." : "Buka Terminal"}

@@ -29,7 +29,7 @@ export function useAuth() {
     if (user.role === "cashier" || user.role === "waitstaff") {
       router.push("/pos");
     } else {
-      router.push("/dashboard");
+      router.push("/");
     }
   };
 
@@ -69,7 +69,7 @@ export function useAuth() {
     user: query.data as User | null | undefined,
     isLoading: query.isLoading,
     isAuthenticated: !!query.data,
-    
+
     // Email Login
     loginEmail: loginEmailMutation.mutate,
     loginEmailAsync: loginEmailMutation.mutateAsync,

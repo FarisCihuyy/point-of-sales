@@ -30,7 +30,8 @@ const app = new Elysia()
         info: {
           title: "POS SaaS Platform API",
           version: "1.0.0",
-          description: "API for Multi-Tenant Offline-First Point of Sales System",
+          description:
+            "API for Multi-Tenant Offline-First Point of Sales System",
         },
       },
     }),
@@ -44,6 +45,8 @@ const app = new Elysia()
   .use(productController)
   .listen(3001);
 
-console.log(`🦊 API running at ${app.server?.hostname}:${app.server?.port}`);
+console.log(
+  `🦊 API running at http://${app.server?.hostname}:${app.server?.port}`,
+);
 
 export type App = typeof app;

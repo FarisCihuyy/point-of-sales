@@ -2,6 +2,8 @@
 
 Monorepo arsitektur modern untuk sistem Point of Sales (POS) multi-tenant, mencakup backend API (ElysiaJS + Drizzle ORM + Turso/LibSQL) dan frontend Web (Next.js 16 + TailwindCSS v4 + `@repo/ui`).
 
+> 📖 **Panduan Penggunaan Non-Teknis (User Guide):** Silakan baca [PANDUAN_PENGGUNAAN.md](./PANDUAN_PENGGUNAAN.md) untuk petunjuk penggunaan sehari-hari bagi Owner, Manajer, dan Kasir.
+
 ---
 
 ## 📦 Cara Menambahkan Komponen UI Baru (shadcn)

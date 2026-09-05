@@ -75,58 +75,63 @@ export async function hydrateCatalog(): Promise<void> {
     const updatedAfter = latestProduct?.updatedAt ?? 0;
 
     // --- Ambil kategori (selalu full refresh, ringan) ---
-    const categories = await apiClient.get<ApiCategory[]>("/api/catalog/categories");
-    const localCategories: LocalCategory[] = categories.map((c) => ({
-      id: c.id,
-      name: c.name,
-      createdAt: c.createdAt,
-    }));
-    await posDb.categories.bulkPut(localCategories);
+    const categories = await apiClient.get<any[]>("/categories");
+    if (Array.isArray(categories) && categories.length > 0) {
+      const localCategories: LocalCategory[] = categories.map((c) => ({
+        id: c.id,
+        name: c.name,
+        createdAt: typeof c.createdAt === "number" ? c.createdAt : (c.createdAt ? new Date(c.createdAt).getTime() / 1000 : Date.now() / 1000),
+      }));
+      await posDb.categories.bulkPut(localCategories);
+    }
 
-    // --- Ambil produk yang berubah setelah updatedAfter ---
-    const products = await apiClient.get<ApiProduct[]>(
-      `/api/catalog/products?updatedAfter=${updatedAfter}`
-    );
+    // --- Ambil produk dari backend ---
+    const products = await apiClient.get<any[]>("/products");
 
-    const localProducts: LocalProduct[] = [];
-    const localVariants: LocalProductVariant[] = [];
+    if (Array.isArray(products) && products.length > 0) {
+      const localProducts: LocalProduct[] = [];
+      const localVariants: LocalProductVariant[] = [];
 
-    for (const p of products) {
-      localProducts.push({
-        id: p.id,
-        categoryId: p.categoryId,
-        name: p.name,
-        sku: p.sku,
-        barcode: p.barcode,
-        basePrice: p.basePrice,
-        costPrice: p.costPrice,
-        imageUrl: p.imageUrl,
-        isActive: p.isActive,
-        updatedAt: p.updatedAt,
-      });
+      for (const p of products) {
+        const updatedAtTimestamp = typeof p.updatedAt === "number" 
+          ? p.updatedAt 
+          : (p.updatedAt ? Math.floor(new Date(p.updatedAt).getTime() / 1000) : Math.floor(Date.now() / 1000));
 
-      if (p.variants) {
-        for (const v of p.variants) {
-          localVariants.push({
-            id: v.id,
-            productId: v.productId,
-            name: v.name,
-            priceAdjustment: v.priceAdjustment,
-            sku: v.sku,
-            isActive: v.isActive,
-          });
+        localProducts.push({
+          id: p.id,
+          categoryId: p.categoryId ?? null,
+          name: p.name,
+          sku: p.sku ?? null,
+          barcode: p.barcode ?? null,
+          basePrice: Number(p.basePrice) || 0,
+          costPrice: Number(p.costPrice) || 0,
+          imageUrl: p.imageUrl ?? null,
+          isActive: p.isActive === false || p.isActive === 0 ? 0 : 1,
+          updatedAt: updatedAtTimestamp,
+        });
+
+        if (p.variants && Array.isArray(p.variants)) {
+          for (const v of p.variants) {
+            localVariants.push({
+              id: v.id,
+              productId: v.productId || p.id,
+              name: v.name,
+              priceAdjustment: Number(v.priceAdjustment) || 0,
+              sku: v.sku ?? null,
+              isActive: v.isActive === false || v.isActive === 0 ? 0 : 1,
+            });
+          }
         }
       }
-    }
 
-    await posDb.products.bulkPut(localProducts);
-    if (localVariants.length > 0) {
-      await posDb.productVariants.bulkPut(localVariants);
+      await posDb.products.bulkPut(localProducts);
+      if (localVariants.length > 0) {
+        await posDb.productVariants.bulkPut(localVariants);
+      }
+      console.log(
+        `[sync] Catalog hydrated — updated ${localProducts.length} products and ${localVariants.length} variants`
+      );
     }
-
-    console.log(
-      `[sync] Catalog hydrated — ${localCategories.length} categories, ${localProducts.length} products updated`
-    );
   } catch (err) {
     console.warn("[sync] hydrateCatalog failed (offline?):", err);
     // Gagal silently — kasir masih bisa gunakan cache lama

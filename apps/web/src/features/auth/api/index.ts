@@ -1,20 +1,24 @@
 import { apiClient } from "@/lib/api-client";
-import type { AuthResponse, LoginInput, RegisterInput, User } from "../types";
+import type { AuthResponse, LoginInput, LoginPinInput, RegisterInput, User } from "../types";
 
 export const authApi = {
-  login: async (credentials: LoginInput): Promise<AuthResponse> => {
+  loginEmail: async (credentials: LoginInput): Promise<AuthResponse> => {
     return apiClient.post<AuthResponse>("/auth/login", credentials);
+  },
+
+  loginPin: async (data: LoginPinInput): Promise<AuthResponse> => {
+    return apiClient.post<AuthResponse>("/auth/login-pin", data);
   },
 
   register: async (data: RegisterInput): Promise<AuthResponse> => {
     return apiClient.post<AuthResponse>("/auth/register", data);
   },
 
-  getProfile: async (): Promise<User> => {
-    return apiClient.get<User>("/auth/me");
+  getMe: async (): Promise<{ user: User }> => {
+    return apiClient.get<{ user: User }>("/auth/me");
   },
 
-  logout: async (): Promise<void> => {
-    return apiClient.post<void>("/auth/logout");
+  logout: async (): Promise<{ success: boolean; message: string }> => {
+    return apiClient.post<{ success: boolean; message: string }>("/auth/logout");
   },
 };

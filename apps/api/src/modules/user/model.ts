@@ -12,7 +12,6 @@ export const UserModel = {
       t.Literal("cashier"),
       t.Literal("waitstaff"),
     ]),
-    pin: t.Nullable(t.String()),
     isActive: t.Boolean(),
     createdAt: t.Date(),
   }),

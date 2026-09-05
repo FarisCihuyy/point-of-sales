@@ -26,13 +26,13 @@ export const UserSchema = z.object({
   name: z.string().min(1, "Nama wajib diisi"),
   email: z.string().email("Email tidak valid"),
   role: UserRoleSchema.default("cashier"),
-  pin: z.string().regex(/^\d{4,6}$/, "PIN harus 4-6 digit angka").optional().nullable(),
   isActive: z.boolean().default(true),
   createdAt: z.date().optional(),
 });
 
 export const CreateUserSchema = UserSchema.omit({ id: true, createdAt: true }).extend({
   password: z.string().min(6, "Password minimal 6 karakter").optional(),
+  pin: z.string().regex(/^\d{4,6}$/, "PIN harus 4-6 digit angka").optional().nullable(),
 });
 export const UpdateUserSchema = CreateUserSchema.partial();
 
@@ -78,6 +78,11 @@ export const UpdateProductSchema = CreateProductSchema.partial();
 export const LoginSchema = z.object({
   email: z.string().email("Email tidak valid"),
   password: z.string().min(1, "Password wajib diisi"),
+});
+
+export const LoginPinSchema = z.object({
+  pin: z.string().regex(/^\d{4,6}$/, "PIN harus 4-6 digit angka"),
+  storeId: z.string().optional(),
 });
 
 export const RegisterSchema = z.object({

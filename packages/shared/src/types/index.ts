@@ -16,6 +16,7 @@ import type {
   CreateProductSchema,
   UpdateProductSchema,
   LoginSchema,
+  LoginPinSchema,
   RegisterSchema,
 } from "../schemas";
 
@@ -39,6 +40,7 @@ export type CreateProductInput = z.infer<typeof CreateProductSchema>;
 export type UpdateProductInput = z.infer<typeof UpdateProductSchema>;
 
 export type LoginInput = z.infer<typeof LoginSchema>;
+export type LoginPinInput = z.infer<typeof LoginPinSchema>;
 export type RegisterInput = z.infer<typeof RegisterSchema>;
 export type AuthResponse = {
   user: User;

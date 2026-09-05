@@ -7,8 +7,21 @@ export const AuthModel = {
   }),
 
   loginPin: t.Object({
-    pin: t.String({ minLength: 4, maxLength: 6, error: "PIN harus 4-6 digit" }),
+    pin: t.String({ minLength: 4, maxLength: 6, error: "PIN harus 4-6 digit angka" }),
     storeId: t.Optional(t.String()),
+  }),
+
+  user: t.Object({
+    id: t.String(),
+    name: t.String(),
+    email: t.String(),
+    role: t.Union([
+      t.Literal("owner"),
+      t.Literal("manager"),
+      t.Literal("cashier"),
+      t.Literal("waitstaff"),
+    ]),
+    storeId: t.Nullable(t.String()),
   }),
 
   authResponse: t.Object({
@@ -16,12 +29,18 @@ export const AuthModel = {
       id: t.String(),
       name: t.String(),
       email: t.String(),
-      role: t.String(),
+      role: t.Union([
+        t.Literal("owner"),
+        t.Literal("manager"),
+        t.Literal("cashier"),
+        t.Literal("waitstaff"),
+      ]),
       storeId: t.Nullable(t.String()),
     }),
-    token: t.Optional(t.String()),
+    message: t.Optional(t.String()),
   }),
 };
 
 export type LoginEmailBody = typeof AuthModel.loginEmail.static;
 export type LoginPinBody = typeof AuthModel.loginPin.static;
+export type AuthUser = typeof AuthModel.user.static;

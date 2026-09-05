@@ -5,33 +5,33 @@ import { users } from "../../db/schema/template";
 import type { CreateUserBody, UpdateUserBody } from "./model";
 
 export class UserService {
+  private static userSelectFields = {
+    id: users.id,
+    storeId: users.storeId,
+    name: users.name,
+    email: users.email,
+    role: users.role,
+    isActive: users.isActive,
+    createdAt: users.createdAt,
+  };
+
+  static async hashSecret(secret: string): Promise<string> {
+    return await Bun.password.hash(secret, {
+      algorithm: "argon2id",
+      memoryCost: 65536,
+      timeCost: 2,
+    });
+  }
+
   static async getAll() {
     return await db
-      .select({
-        id: users.id,
-        storeId: users.storeId,
-        name: users.name,
-        email: users.email,
-        role: users.role,
-        pin: users.pin,
-        isActive: users.isActive,
-        createdAt: users.createdAt,
-      })
+      .select(this.userSelectFields)
       .from(users);
   }
 
   static async getById(id: string) {
     const [user] = await db
-      .select({
-        id: users.id,
-        storeId: users.storeId,
-        name: users.name,
-        email: users.email,
-        role: users.role,
-        pin: users.pin,
-        isActive: users.isActive,
-        createdAt: users.createdAt,
-      })
+      .select(this.userSelectFields)
       .from(users)
       .where(eq(users.id, id))
       .limit(1);
@@ -45,8 +45,10 @@ export class UserService {
 
   static async create(data: CreateUserBody) {
     const passwordHash = data.password
-      ? Bun.password.hashSync(data.password)
-      : "default_hash";
+      ? await this.hashSecret(data.password)
+      : await this.hashSecret("default_password_123");
+
+    const pinHash = data.pin ? await this.hashSecret(data.pin) : null;
 
     const [newUser] = await db
       .insert(users)
@@ -55,20 +57,11 @@ export class UserService {
         email: data.email,
         storeId: data.storeId ?? null,
         role: data.role ?? "cashier",
-        pin: data.pin ?? null,
+        pin: pinHash,
         passwordHash,
         isActive: data.isActive ?? true,
       })
-      .returning({
-        id: users.id,
-        storeId: users.storeId,
-        name: users.name,
-        email: users.email,
-        role: users.role,
-        pin: users.pin,
-        isActive: users.isActive,
-        createdAt: users.createdAt,
-      });
+      .returning(this.userSelectFields);
 
     if (!newUser) {
       return status(500, { message: "Gagal membuat karyawan" });
@@ -83,25 +76,21 @@ export class UserService {
     if (data.email !== undefined) updates.email = data.email;
     if (data.storeId !== undefined) updates.storeId = data.storeId;
     if (data.role !== undefined) updates.role = data.role;
-    if (data.pin !== undefined) updates.pin = data.pin;
     if (data.isActive !== undefined) updates.isActive = data.isActive;
-    if (data.password)
-      updates.passwordHash = Bun.password.hashSync(data.password);
+    
+    if (data.pin !== undefined) {
+      updates.pin = data.pin ? await this.hashSecret(data.pin) : null;
+    }
+    
+    if (data.password) {
+      updates.passwordHash = await this.hashSecret(data.password);
+    }
 
     const [updated] = await db
       .update(users)
       .set(updates)
       .where(eq(users.id, id))
-      .returning({
-        id: users.id,
-        storeId: users.storeId,
-        name: users.name,
-        email: users.email,
-        role: users.role,
-        pin: users.pin,
-        isActive: users.isActive,
-        createdAt: users.createdAt,
-      });
+      .returning(this.userSelectFields);
 
     if (!updated) {
       return status(404, { message: "Karyawan tidak ditemukan" });
@@ -114,7 +103,7 @@ export class UserService {
     const [deleted] = await db
       .delete(users)
       .where(eq(users.id, id))
-      .returning();
+      .returning({ id: users.id });
 
     if (!deleted) {
       return status(404, { message: "Karyawan tidak ditemukan" });

@@ -2,7 +2,8 @@ import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { jwtVerify } from "jose";
 
-const JWT_SECRET = process.env.JWT_SECRET || "pos_jwt_super_secret_key_change_in_prod";
+const JWT_SECRET =
+  process.env.JWT_SECRET || "pos_jwt_super_secret_key_change_in_prod";
 const encodedSecret = new TextEncoder().encode(JWT_SECRET);
 
 interface UserJwtPayload {
@@ -32,7 +33,6 @@ export async function proxy(request: NextRequest) {
       const { payload } = await jwtVerify(token, encodedSecret);
       user = payload as unknown as UserJwtPayload;
     } catch {
-      // Invalid/expired token
       user = null;
     }
   }
@@ -47,14 +47,17 @@ export async function proxy(request: NextRequest) {
     if (user.role === "cashier" || user.role === "waitstaff") {
       return NextResponse.redirect(new URL("/pos", request.url));
     }
-    return NextResponse.redirect(new URL("/dashboard", request.url));
+    return NextResponse.redirect(new URL("/stores", request.url));
   }
 
-  // 2. Gating Backoffice Dashboard (/dashboard, /stores, /inventory, /admin, etc.)
+  // 2. Gating Backoffice Dashboard (/dashboard, /stores, /inventory, /products, /categories, /users, /admin)
   const isDashboardRoute =
     pathname.startsWith("/dashboard") ||
     pathname.startsWith("/stores") ||
     pathname.startsWith("/inventory") ||
+    pathname.startsWith("/products") ||
+    pathname.startsWith("/categories") ||
+    pathname.startsWith("/users") ||
     pathname.startsWith("/analytics") ||
     pathname.startsWith("/settings") ||
     (pathname.startsWith("/admin") && pathname !== "/admin/login");
@@ -85,11 +88,16 @@ export async function proxy(request: NextRequest) {
   return NextResponse.next();
 }
 
+export const middleware = proxy;
+
 export const config = {
   matcher: [
     "/dashboard/:path*",
     "/stores/:path*",
     "/inventory/:path*",
+    "/products/:path*",
+    "/categories/:path*",
+    "/users/:path*",
     "/analytics/:path*",
     "/settings/:path*",
     "/admin/:path*",
